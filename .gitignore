@@ -2,6 +2,11 @@
 *.config
 *.csproj
 *.lock
+*.ide
+*.ide-shm
+*.ide-wal
+*.suo
+.suo
 obj/
 Properties/
 bin/
