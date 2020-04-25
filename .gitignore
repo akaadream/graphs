@@ -1,0 +1,7 @@
+*.sln
+*.config
+*.csproj
+*.lock
+obj/
+Properties/
+bin/
