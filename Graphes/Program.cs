@@ -11,7 +11,6 @@ namespace Graphes
         static void Main(string[] args)
         {
             Graph graph = new Graph();
-            //Console.WriteLine(graph.ToString());
 
             int degeneracy = graph.Degeneracy();
             Console.WriteLine("Dégénérescence égale à : " + degeneracy);

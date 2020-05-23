@@ -32,10 +32,11 @@ namespace Graphes
 
             // Instanciation des sommets
             //InitializeGraph();
-            LoadExistingGraph(@"0.edges");
+            LoadExistingGraph(@"ego-facebook.edges", ',');
+            //ExampleGraph();
 
             // Construction de la matrice
-            BuildAdjacentMatrix(44);
+            //BuildAdjacentMatrix(44);
         }
 
         // Initialiation par défaut du graphe
@@ -47,8 +48,57 @@ namespace Graphes
             }
         }
 
+        public void ExampleGraph()
+        {
+            InitializeGraph(10);
+            // A:0, B:1, C:2, D:3, E:4, F:5, G:6, H:7, I:8, J:9
+            Nodes[0].LinkedNodes.Add(Nodes[1]);
+            Nodes[0].LinkedNodes.Add(Nodes[2]);
+            Nodes[0].LinkedNodes.Add(Nodes[3]);
+            Nodes[0].LinkedNodes.Add(Nodes[4]);
+            Nodes[0].LinkedNodes.Add(Nodes[5]);
+            Nodes[1].LinkedNodes.Add(Nodes[0]);
+            Nodes[1].LinkedNodes.Add(Nodes[6]);
+            Nodes[2].LinkedNodes.Add(Nodes[0]);
+            Nodes[2].LinkedNodes.Add(Nodes[3]);
+            Nodes[2].LinkedNodes.Add(Nodes[4]);
+            Nodes[3].LinkedNodes.Add(Nodes[0]);
+            Nodes[3].LinkedNodes.Add(Nodes[2]);
+            Nodes[3].LinkedNodes.Add(Nodes[5]);
+            Nodes[4].LinkedNodes.Add(Nodes[0]);
+            Nodes[4].LinkedNodes.Add(Nodes[2]);
+            Nodes[4].LinkedNodes.Add(Nodes[5]);
+            Nodes[4].LinkedNodes.Add(Nodes[6]);
+            Nodes[5].LinkedNodes.Add(Nodes[0]);
+            Nodes[5].LinkedNodes.Add(Nodes[3]);
+            Nodes[5].LinkedNodes.Add(Nodes[4]);
+            Nodes[5].LinkedNodes.Add(Nodes[6]);
+            Nodes[5].LinkedNodes.Add(Nodes[7]);
+            Nodes[5].LinkedNodes.Add(Nodes[8]);
+            Nodes[5].LinkedNodes.Add(Nodes[9]);
+            Nodes[6].LinkedNodes.Add(Nodes[1]);
+            Nodes[6].LinkedNodes.Add(Nodes[4]);
+            Nodes[6].LinkedNodes.Add(Nodes[5]);
+            Nodes[6].LinkedNodes.Add(Nodes[6]);
+            Nodes[7].LinkedNodes.Add(Nodes[5]);
+            Nodes[7].LinkedNodes.Add(Nodes[6]);
+            Nodes[7].LinkedNodes.Add(Nodes[8]);
+            Nodes[8].LinkedNodes.Add(Nodes[5]);
+            Nodes[8].LinkedNodes.Add(Nodes[7]);
+            Nodes[9].LinkedNodes.Add(Nodes[5]);
+
+            int maxDegree = 0;
+            foreach (Node node in Nodes)
+            {
+                node.Degree = node.LinkedNodes.Count;
+                if (node.Degree > maxDegree) maxDegree = node.Degree;
+            }
+
+            BuildDegreesLists(maxDegree);
+        }
+
         // Charger un graph existant
-        public void LoadExistingGraph(string filename)
+        public void LoadExistingGraph(string filename, char separator)
         {
             try
             {
@@ -62,7 +112,7 @@ namespace Graphes
                 // On parcourt toutes les lignes
                 foreach (string line in lines)
                 {
-                    string[] values = line.Split(' ');
+                    string[] values = line.Split(separator);
                     if (values.Length != 2) continue;
                     // Parse values to int
                     int value1 = int.Parse(values[0]);
@@ -141,6 +191,7 @@ namespace Graphes
                 Console.WriteLine("K : " + k);
                 // On met k égal au max entre k et l'indice
                 k = Math.Max(k, indice);
+                if (NodesList[indice].Nodes.Count == 0) break;
                 // On récupère un sommet de la liste de l'indice
                 Node vertex = NodesList[indice].Nodes.First();
                 // On supprime le sommet de la liste
@@ -162,6 +213,10 @@ namespace Graphes
                         // On ajoute le noeud dans la liste correspondante
                         if (!NodesList[node.Degree].Nodes.Contains(node))
                         {
+                            // On met à jour le centre du noeud
+                            node.Center = node.Degree;
+
+                            // Ajout du noeud
                             NodesList[node.Degree].Nodes.Add(node);
                             NodesList[node.Degree + 1].Nodes.Remove(node);
                         }
